@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Activities {
 
-    private ArrayList<Activity> data = new ArrayList<Activity>();
+    private ArrayList<Activity> data = new ArrayList<>();
     private String name;
 
     Activities(String name)
