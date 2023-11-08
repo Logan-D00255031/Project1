@@ -9,13 +9,15 @@ public class Activity {
     private int duration;
     private double distance;
     private int heartRate;
+    private double caloriesBurned;
 
-    public Activity(String activity, LocalDate date, int duration, double distance, int heartRate) {
+    public Activity(String activity, LocalDate date, int duration, double distance, int heartRate, double caloriesBurned) {
         this.activity = activity;
         this.date = date;
         this.duration = duration;
         this.distance = distance;
         this.heartRate = heartRate;
+        this.caloriesBurned = caloriesBurned;
     }
 
     public String getActivity() {
@@ -56,5 +58,13 @@ public class Activity {
 
     public void setHeartRate(int heartRate) {
         this.heartRate = heartRate;
+    }
+
+    public double getCaloriesBurned() {
+        return caloriesBurned;
+    }
+
+    public void setCaloriesBurned(double caloriesBurned) {
+        this.caloriesBurned = caloriesBurned;
     }
 }
