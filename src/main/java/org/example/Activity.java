@@ -67,4 +67,16 @@ public class Activity {
     public void setCaloriesBurned(double caloriesBurned) {
         this.caloriesBurned = caloriesBurned;
     }
+
+    @Override
+    public String toString() {
+        return "Activity{" +
+                "activity='" + activity + '\'' +
+                ", date=" + date +
+                ", duration=" + duration +
+                ", distance=" + distance +
+                ", heartRate=" + heartRate +
+                ", caloriesBurned=" + caloriesBurned +
+                '}';
+    }
 }

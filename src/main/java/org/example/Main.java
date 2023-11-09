@@ -5,11 +5,15 @@ package org.example;
 import java.io. * ;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
 
+        //ArrayList<Activity> activitiesData = new ArrayList<>();
         Activities activitiesData = new Activities("dataSet");
         Scanner keyboard = new Scanner(System.in);
         int userInput;
@@ -47,36 +51,8 @@ public class Main {
         }
 
 
+        //  System.out.printf("%-10s %5s %5d %7.2f %5d %n", activity, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), duration, distance, heartRate);
 
-
-        String fileName = "activity_data_10.csv"; // file should be in the project (above pom.xml)
-
-        // Format of each row of data is:
-        // Activity Type, Date, Duration, Distance, Average heart rate - these heading names are included as the first row in file
-        // Running, 04/01/2020, 67, 8.80, 152  for example
-
-        try (Scanner sc = new Scanner(new File("activity_data_10.csv"))) {
-            if (sc.hasNextLine())
-                sc.nextLine();   // read the header line containing column titles, but don't use it
-
-            // read one line at a time into a String, and parse the String into tokens (parts)
-            while (sc.hasNextLine()) {
-                String line = sc.nextLine();             // read full line ( delimited by a "\n" )
-                String[] tokens = line.split(", ");  // split line using a comma as the delimiter (separator)
-
-                String activity = tokens[0];  // extract first token/field from the tokens array (i.e. the activity)
-                LocalDate date = LocalDate.parse(tokens[1], DateTimeFormatter.ofPattern("dd/MM/yyyy"));  // e.g. Convert String "04/01/2020" to LocalDate 2020-01-04
-                int duration = Integer.parseInt(tokens[2]);  // e.g. Convert String "67" to int value 67
-                double distance = Double.parseDouble(tokens[3]);  // e.g. Convert String "8.80" to double 8.80
-                int heartRate = Integer.parseInt(tokens[4]);
-
-                // Print out the row of field values using format specifiers
-                System.out.printf("%-10s %5s %5d %7.2f %5d %n", activity, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), duration, distance, heartRate);
-            }
-
-        } catch (FileNotFoundException exception) {
-            System.out.println("FileNotFoundException caught. The file " + fileName + " may not exist." + exception);
-        }
     }
 
     // Menu 1 (Upload file menu)
@@ -155,14 +131,48 @@ public class Main {
 
             switch (userInput)
             {
-                case 1 -> {}
-                case 2 -> {}
-                case 3 -> {}
-                case 4 -> {}
-                case 5 -> {}
-                case 6 -> {}
-                case 7 -> {}
-                case 8 -> {}
+                case 1 -> {
+                    CaloriesComparator caloriesComparator = new CaloriesComparator();
+                    Collections.sort(activitiesData.getData(), caloriesComparator.reversed());
+                    display(activitiesData.getData());
+                }
+                case 2 -> {
+                    activitiesData.getData().sort((Activity a1, Activity a2) -> a1.getDate().compareTo(a2.getDate()));
+                    display(activitiesData.getData());
+                }
+                case 3 -> {
+                    Comparator<Activity> dateComparator = (a1, a2) -> a1.getDate().compareTo(a2.getDate());
+                    activitiesData.getData().sort(dateComparator.reversed());
+                    display(activitiesData.getData());
+                }
+                case 4 -> {
+                    activitiesData.getData().sort((Activity a1, Activity a2) -> Integer.compare(a1.getDuration(), a2.getDuration()));
+                    display(activitiesData.getData());
+                }
+                case 5 -> {
+                    Comparator<Activity> durationComparator = (a1, a2) -> Integer.compare(a1.getDuration(), a2.getDuration());
+                    activitiesData.getData().sort(durationComparator.reversed());
+                    display(activitiesData.getData());
+                }
+                case 6 -> {
+                    activitiesData.getData().sort( new Comparator<Activity>() {
+                        @Override
+                        public int compare(Activity a1, Activity a2) {
+                            return a1.getActivity().compareTo(a2.getActivity());
+                        }
+                    });
+                    display(activitiesData.getData());
+                }
+                case 7 -> {
+                    DistanceComparator distanceComparator = new DistanceComparator();
+                    activitiesData.getData().sort(distanceComparator);
+                    display(activitiesData.getData());
+                }
+                case 8 -> {
+                    DistanceComparator distanceComparator = new DistanceComparator();
+                    activitiesData.getData().sort(distanceComparator.reversed());
+                    display(activitiesData.getData());
+                }
                 case 9 -> run = false;
                 default -> System.out.println("Invalid input!");
             }
@@ -249,7 +259,15 @@ public class Main {
         }
 
         return intensityValue;
+    }
 
+    public static void display(ArrayList<Activity> activities) {
+        int count = 0;
+        for (Activity activity : activities) {
+            System.out.println(activities.get(count));
+            count++;
+        }
+        System.out.println();
     }
 
 }
