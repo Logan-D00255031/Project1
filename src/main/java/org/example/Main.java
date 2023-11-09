@@ -108,6 +108,7 @@ public class Main {
         }
     }
 
+    // Menu 2 (Activity sorting)
     private static void menu2(Activities activitiesData) {
         Scanner keyboard = new Scanner(System.in);
         int userInput;
@@ -179,8 +180,76 @@ public class Main {
         }
     }
 
+    // Menu 3 (Search subsets)
     private static void menu3(Activities activitiesData) {
+        Scanner keyboard = new Scanner(System.in);
+        int userInput;
+        boolean run = true;
 
+        while(run) {
+            System.out.println("""
+                    Choose a search subset.
+                    1: Activity type
+                    2: Above a minimum distance
+                    3: Type of energy expended
+                    4: Above a minimum duration
+                    5: Go Back
+                    """);
+            userInput = keyboard.nextInt();
+
+            switch (userInput) {
+                case 1 -> {
+                    Scanner keyboard2 = new Scanner(System.in);
+                    String userActivity;
+                    ArrayList<Activity> tempData = new ArrayList<>();
+                    System.out.println("What activity?");
+                    userActivity = keyboard2.nextLine();
+
+                    int count = 0;
+                    for (Activity activity : activitiesData.getData()) {
+                        if(activitiesData.getData().get(count).getActivity().equals(userActivity)) {
+                            tempData.add(activitiesData.getData().get(count));
+                        }
+                        count++;
+                    }
+                    display(tempData);
+                }
+                case 2 -> {
+                    Scanner keyboard2 = new Scanner(System.in);
+                    int userDistance;
+                    ArrayList<Activity> tempData = new ArrayList<>();
+                    System.out.println("What's the minimum distance?");
+                    userDistance = keyboard2.nextInt();
+
+                    int count = 0;
+                    for (Activity activity : activitiesData.getData()) {
+                        if(activitiesData.getData().get(count).getDistance() > (userDistance)) {
+                            tempData.add(activitiesData.getData().get(count));
+                        }
+                        count++;
+                    }
+                    display(tempData);
+                }
+                case 3 -> {} // Unsure what I'm supposed to do here, sorry
+                case 4 -> {
+                    Scanner keyboard2 = new Scanner(System.in);
+                    double userDuration;
+                    ArrayList<Activity> tempData = new ArrayList<>();
+                    System.out.println("What's the minimum duration?");
+                    userDuration = keyboard2.nextDouble();
+
+                    int count = 0;
+                    for (Activity activity : activitiesData.getData()) {
+                        if(activitiesData.getData().get(count).getDuration() > (userDuration)) {
+                            tempData.add(activitiesData.getData().get(count));
+                        }
+                        count++;
+                    }
+                    display(tempData);
+                }
+                case 5 -> run = false;
+            }
+        }
     }
 
     private static void menu4(Activities activitiesData) {
