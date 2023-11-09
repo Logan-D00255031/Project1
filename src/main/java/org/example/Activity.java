@@ -20,6 +20,10 @@ public class Activity {
         this.caloriesBurned = caloriesBurned;
     }
 
+    public Activity(LocalDate date) {
+        this.date = date;
+    }
+
     public String getActivity() {
         return activity;
     }

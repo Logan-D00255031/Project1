@@ -35,6 +35,7 @@ public class Main {
                     """);
             userInput = keyboard.nextInt();
 
+            // Cases correspond to displayed numbering
             switch (userInput)
             {
                 case 1 -> menu1(activitiesData);  // Opens the upload file menu
@@ -50,9 +51,7 @@ public class Main {
             }
         }
 
-
-        //  System.out.printf("%-10s %5s %5d %7.2f %5d %n", activity, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), duration, distance, heartRate);
-
+        //System.out.printf("%-10s %5s %5d %7.2f %5d %n", activity, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), duration, distance, heartRate);
     }
 
     // Menu 1 (Upload file menu)
@@ -69,7 +68,7 @@ public class Main {
             userInput = keyboard.nextLine();
 
             if(userInput.equals("1")) {
-                run = false;
+                run = false;    // Close menu when the number 1 is inputted
             }
             else {
                 // Format of each row of data is:
@@ -83,7 +82,7 @@ public class Main {
                     // read one line at a time into a String, and parse the String into tokens (parts)
                     while (sc.hasNextLine()) {
                         String line = sc.nextLine();             // read full line ( delimited by a "\n" )
-                        String[] tokens = line.split(", ");  // split line using a comma as the delimiter (separator)
+                        String[] tokens = line.split(", ");  // split line using a comma plus a space as the delimiter (separator)
 
                         String activity = tokens[0];  // extract first token/field from the tokens array (i.e. the activity)
                         LocalDate date = LocalDate.parse(tokens[1], DateTimeFormatter.ofPattern("dd/MM/yyyy"));  // e.g. Convert String "04/01/2020" to LocalDate 2020-01-04
@@ -91,12 +90,12 @@ public class Main {
                         double distance = Double.parseDouble(tokens[3]);  // e.g. Convert String "8.80" to double 8.80
                         int heartRate = Integer.parseInt(tokens[4]);
 
-                        double kilometersPerHour = (double) distance / duration;
-                        double intensityValue = findIntensityValue(kilometersPerHour, activity);
-                        double calories = intensityValue * duration;
+                        double kilometersPerHour = (double) distance / duration;    // Calculate the average Kilometers per Hour was travelled
+                        double intensityValue = findIntensityValue(kilometersPerHour, activity);    // Find the intensity value from the Km/h and the activity type
+                        double calories = intensityValue * duration;    // Calculate the total calories consumed during the activity
 
-                        Activity tokenData = new Activity(activity, date, duration, distance, heartRate, calories);
-                        activitiesData.addData(tokenData);
+                        Activity tokenData = new Activity(activity, date, duration, distance, heartRate, calories);     // Add data into an Activity class
+                        activitiesData.addData(tokenData);  // Add the Activity class to the main data set
                         // Print out the row of field values using format specifiers
                         //System.out.printf("%-10s %5s %5d %7.2f %5d %n", activity, date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")), duration, distance, heartRate);
                     }
@@ -130,6 +129,7 @@ public class Main {
                     """);
             userInput = keyboard.nextInt();
 
+            // Cases correspond to displayed numbering
             switch (userInput)
             {
                 case 1 -> {
@@ -197,7 +197,9 @@ public class Main {
                     """);
             userInput = keyboard.nextInt();
 
+            // Cases correspond to displayed numbering
             switch (userInput) {
+                // Activity type
                 case 1 -> {
                     Scanner keyboard2 = new Scanner(System.in);
                     String userActivity;
@@ -214,6 +216,8 @@ public class Main {
                     }
                     display(tempData);
                 }
+
+                // Minimum distance
                 case 2 -> {
                     Scanner keyboard2 = new Scanner(System.in);
                     int userDistance;
@@ -221,6 +225,7 @@ public class Main {
                     System.out.println("What's the minimum distance?");
                     userDistance = keyboard2.nextInt();
 
+                    // Add data to list if any found within parameters
                     int count = 0;
                     for (Activity activity : activitiesData.getData()) {
                         if(activitiesData.getData().get(count).getDistance() > (userDistance)) {
@@ -230,7 +235,11 @@ public class Main {
                     }
                     display(tempData);
                 }
+
+                // Type of energy expended
                 case 3 -> {} // Unsure what I'm supposed to do here, sorry
+
+                // Minimum duration
                 case 4 -> {
                     Scanner keyboard2 = new Scanner(System.in);
                     double userDuration;
@@ -238,6 +247,7 @@ public class Main {
                     System.out.println("What's the minimum duration?");
                     userDuration = keyboard2.nextDouble();
 
+                    // Add data to list if any found within parameters
                     int count = 0;
                     for (Activity activity : activitiesData.getData()) {
                         if(activitiesData.getData().get(count).getDuration() > (userDuration)) {
@@ -252,8 +262,41 @@ public class Main {
         }
     }
 
+    // Menu 4 (Natural ordering / Binary search)
     private static void menu4(Activities activitiesData) {
+        Scanner keyboard = new Scanner(System.in);
+        String userInput;
+        boolean run = true;
 
+        while(run) {
+            System.out.println("""
+                    Enter the date of the activity you would like to search for.
+                    (Must be in the following format: dd/MM/yyyy)
+                    Enter 1 to cancel.
+                    """);
+            userInput = keyboard.nextLine();
+
+            if(userInput.equals("1")) {
+                run = false;
+            }
+            else {
+                LocalDate date = LocalDate.parse((userInput), DateTimeFormatter.ofPattern("dd/MM/yyyy"));   // Formats the date for use in binary search
+                DateComparator dateComparator = new DateComparator();
+                activitiesData.getData().sort(dateComparator);      // Sorts list prior to binary search
+
+                Activity key = new Activity(date);      // Key with date data given
+
+                int index = Collections.binarySearch(activitiesData.getData(), key, dateComparator);    // Search for the key and output if found
+
+                if(index >= 0) {
+                    System.out.println("Found " + activitiesData.getData().get(index) + " at index " + index);
+                }
+                else {
+                    System.out.println("Date not found in data set");
+                }
+                System.out.println();
+            }
+        }
     }
 
     private static void menu5(Activities activitiesData) {
