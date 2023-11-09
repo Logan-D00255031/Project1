@@ -299,17 +299,54 @@ public class Main {
         }
     }
 
+    // Menu 5 (Overall performance stats)
     private static void menu5(Activities activitiesData) {
+        Scanner keyboard = new Scanner(System.in);
+        String userInput;
+        boolean run = true;
 
+        DateComparator dateComparator = new DateComparator();
+        activitiesData.getData().sort(dateComparator);      // Sort list prior to calculation
+
+        // Get total distance and calories from all data within the list
+        int count = 0;
+        double totalDistance = 0;
+        double totalCaloriesBurned = 0;
+        for (Activity activity : activitiesData.getData()) {
+            totalDistance += activitiesData.getData().get(count).getDistance();
+            totalCaloriesBurned += activitiesData.getData().get(count).getCaloriesBurned();
+            count++;
+        }
+
+        // Calculate the average from the total distance and calories by the amount of activities logged
+        double averageDistance = (double) totalDistance / count;
+        double averageCaloriesBurned = totalCaloriesBurned / count;
+
+        // Display the statistics
+        while(run) {
+            System.out.printf("""
+                    Overall Performance:
+                    
+                    Average distance travelled per activity:    %.2f
+                    Average calories burned per activity:       %.2f
+                    
+                    Enter any key to go back.
+                    """, averageDistance, averageCaloriesBurned);
+            userInput = keyboard.nextLine();
+
+            run = false;
+        }
     }
-    
+
+    // Intensity value calculations
     private static double findIntensityValue(double kilometersPerHour, String activity) {
         int intensity;
         double intensityValue = 0;
 
         switch (activity) {
+            // Values for Running
             case "Running" -> {
-                if (kilometersPerHour < 4) {
+                if (kilometersPerHour < 4) {    // Get the intensity rating
                     intensity = 1;
                 } else if (kilometersPerHour >= 4 && kilometersPerHour < 8) {
                     intensity = 2;
@@ -320,7 +357,7 @@ public class Main {
                 } else {
                     intensity = 5;
                 }
-                switch (intensity) {
+                switch (intensity) {    // Get the intensity value from rating
                     case 1 -> intensityValue = 4.1;
                     case 2 -> intensityValue = 7.2;
                     case 3 -> intensityValue = 10;
@@ -328,8 +365,9 @@ public class Main {
                     case 5 -> intensityValue = 20.8;
                 }
             }
+            // Values for Swimming
             case "Swimming" -> {
-                if (kilometersPerHour < 1.25) {
+                if (kilometersPerHour < 1.25) {     // Get the intensity rating
                     intensity = 1;
                 } else if (kilometersPerHour >= 1.25 && kilometersPerHour < 2) {
                     intensity = 2;
@@ -340,7 +378,7 @@ public class Main {
                 } else {
                     intensity = 5;
                 }
-                switch (intensity) {
+                switch (intensity) {    // Get the intensity value from rating
                     case 1 -> intensityValue = 5;
                     case 2 -> intensityValue = 6.3;
                     case 3 -> intensityValue = 7.6;
@@ -348,7 +386,8 @@ public class Main {
                     case 5 -> intensityValue = 10.2;
                 }
             }
-            case "Cycling" -> {
+            // Values for Cycling
+            case "Cycling" -> {     // Get the intensity rating
                 if (kilometersPerHour < 8) {
                     intensity = 1;
                 } else if (kilometersPerHour >= 8 && kilometersPerHour <= 16) {
@@ -360,7 +399,7 @@ public class Main {
                 } else {
                     intensity = 5;
                 }
-                switch (intensity) {
+                switch (intensity) {    // Get the intensity value from rating
                     case 1 -> intensityValue = 2;
                     case 2 -> intensityValue = 5;
                     case 3 -> intensityValue = 7;
@@ -373,6 +412,7 @@ public class Main {
         return intensityValue;
     }
 
+    // Display all Activity classes within the specified ArrayList
     public static void display(ArrayList<Activity> activities) {
         int count = 0;
         for (Activity activity : activities) {
